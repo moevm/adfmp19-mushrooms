@@ -13,10 +13,7 @@ class Questionnaire : MushroomsActivityBase() {
         setContentView(R.layout.activity_questionnaire)
         setupActionBar()
 
-        but_next.setOnClickListener {
-            val intent = Intent(this, Questionnaire2::class.java)
-            startActivity(intent)
-        }
+        but_next.setOnClickListener { nextPage() }
 
         val hatColorSpinner: Spinner = findViewById(R.id.ed_top_color)
         ArrayAdapter.createFromResource(this, R.array.hat_color_array, android.R.layout.simple_spinner_item)
@@ -59,5 +56,18 @@ class Questionnaire : MushroomsActivityBase() {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 sliceSpinner.adapter = adapter
             }
+    }
+
+    private fun nextPage() {
+        val criteria = MushroomCriteria(
+            ed_top_color.selectedItem.toString(),
+            ed_grow_place.selectedItem.toString(),
+            ed_found.selectedItem.toString(),
+            ed_round_color.selectedItem.toString(),
+            ed_round_kind.selectedItem.toString(),
+            ed_slice.selectedItem.toString())
+        val intent = Intent(this, Questionnaire2::class.java)
+        intent.putExtra("criteria", criteria)
+        startActivity(intent)
     }
 }

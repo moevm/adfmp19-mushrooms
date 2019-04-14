@@ -8,8 +8,13 @@ import android.widget.ImageButton
 
 abstract class MushroomsActivityBase : AppCompatActivity() {
 
+    open val isHistoryVisible : Boolean = true
+    open val isShareVisible : Boolean = false
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+        menu?.getItem(0)?.isVisible = isHistoryVisible
+        menu?.getItem(1)?.isVisible = isShareVisible
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -17,6 +22,10 @@ abstract class MushroomsActivityBase : AppCompatActivity() {
         return when (item!!.itemId) {
             R.id.action_history -> {
                 goHistory()
+                true
+            }
+            R.id.action_share -> {
+                share()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -36,9 +45,11 @@ abstract class MushroomsActivityBase : AppCompatActivity() {
         startActivity(intent)
     }
 
-    protected fun goHome() {
+    private fun goHome() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
     }
+
+    protected open fun share() = Unit
 }

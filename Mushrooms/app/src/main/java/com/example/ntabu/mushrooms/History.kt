@@ -8,6 +8,9 @@ import kotlinx.android.synthetic.main.activity_history.*
 
 class History : MushroomsActivityBase() {
 
+    override val isHistoryVisible: Boolean
+        get() = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
@@ -27,10 +30,5 @@ class History : MushroomsActivityBase() {
             val group = history_item1.parent as ViewGroup
             group.removeAllViews()
         }
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.getItem(0)?.isVisible = false
-        return super.onPrepareOptionsMenu(menu)
     }
 }

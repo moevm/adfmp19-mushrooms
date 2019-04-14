@@ -15,10 +15,7 @@ class Questionnaire2 : MushroomsActivityBase() {
         setContentView(R.layout.activity_questionnaire2)
         setupActionBar()
 
-        but_ready.setOnClickListener {
-            val intent = Intent(this, ResultsActivity::class.java)
-            startActivity(intent)
-        }
+        but_ready.setOnClickListener { showResult() }
 
         val hatSpecSpinner: Spinner = findViewById(R.id.ed_hat_spec)
         ArrayAdapter.createFromResource(this, R.array.spec_array, android.R.layout.simple_spinner_item)
@@ -58,5 +55,18 @@ class Questionnaire2 : MushroomsActivityBase() {
                 // Do nothing
             }
         })
+    }
+
+    private fun showResult() {
+        val criteria = intent.extras.getParcelable<MushroomCriteria>("criteria")!!
+        criteria.hatWidth = sb_hat_width.progress
+        criteria.specials = ed_hat_spec.selectedItem.toString()
+        criteria.legColor = ed_leg_color.selectedItem.toString()
+        criteria.legHeight = sb_leg_height.progress
+        criteria.legDiameter = sb_leg_diameter.progress
+        criteria.legRing = ed_leg_ring.selectedItem.toString()
+        val intent = Intent(this, ResultsActivity::class.java)
+        intent.putExtra("criteria", criteria)
+        startActivity(intent)
     }
 }

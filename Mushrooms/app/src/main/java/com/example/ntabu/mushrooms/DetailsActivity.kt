@@ -3,15 +3,36 @@ package com.example.ntabu.mushrooms
 import android.os.Bundle
 import android.text.Html
 import kotlinx.android.synthetic.main.activity_details.*
+import android.content.Intent
+import android.widget.TextView
+
 
 class DetailsActivity : MushroomsActivityBase() {
+
+    override val isShareVisible: Boolean
+        get() = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
         setupActionBar()
 
-        descriptionText.setText(getDescriptionText())
+        val details = intent.extras.getParcelable<MushroomDetails>("details")
+        if (details != null) {
+            val mushroomTitle = findViewById<TextView>(R.id.title)
+            mushroomTitle.text = details.name.toString()
+            descriptionText.setText(Html.fromHtml(details.description, Html.FROM_HTML_MODE_LEGACY).toString())
+            if (details.pictureId == 2) {
+                image_mushroom1.setImageDrawable(getDrawable(R.drawable.fli_killer))
+                image_mushroom2.setImageDrawable(getDrawable(R.drawable.fli_killer))
+            }
+            else {
+                image_mushroom1.setImageDrawable(getDrawable(R.drawable.belyiy_grib_elovyiy))
+                image_mushroom2.setImageDrawable(getDrawable(R.drawable.belyiy_grib_sosnovyiy))
+            }
+        }
+        else
+            descriptionText.setText(getDescriptionText())
     }
 
     private fun getDescriptionText() : String {
@@ -24,5 +45,15 @@ class DetailsActivity : MushroomsActivityBase() {
             "У старых грибов она может немного пожелтеть. На срезе и после обработки не темнеет.</p>" +
             "<p>Растут везде, за исключением Антарктиды и Австралии, в хвойных, лиственных и смешанных лесах.</p>"
         return Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY).toString()
+    }
+
+    override fun share() {
+        val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+        sharingIntent.type = "text/plain"
+        val mushroomTitle = findViewById<TextView>(R.id.title)
+        val shareBody = "${mushroomTitle.text}\n\n${descriptionText.text}"
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Смотри чего нашел!")
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+        startActivity(Intent.createChooser(sharingIntent, "Поделиться через"))
     }
 }
